@@ -14,8 +14,8 @@ void PositionedObject::Update(float deltaTime)
 	{
 		for (auto child : children)
 		{
-			child->Position = Vector3Add(PositionFromParent, Position);
-			child->Update(deltaTime);
+			//child->Position = Vector3Add(PositionFromParent, Position);
+			//child->Update(deltaTime);
 		}
 	}
 

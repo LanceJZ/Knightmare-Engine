@@ -31,7 +31,7 @@ void GameLogic::Load()
 bool GameLogic::BeginRun()
 {
 	rock2.Position = { 2.5f, 2.5f, 0 };
-	rock3.Position = { 2.5f, -2.5f, 0 };
+	rock3.Position = { -2.5f, -2.5f, 0 };
 	rock4.Position = { -2.5f, -2.5f, 0 };
 
 	rock1.AddChild(&rock2);

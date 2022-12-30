@@ -49,23 +49,39 @@ void LineModel::Draw()
 			if (isChild)
 			{
 				Vector3 position = { 0 };
-				//rlPushMatrix();
+				float rotationZ = 0;
 
 				for (auto parent : parents)
 				{
 					position = Vector3Add(parent->Position, position);
+					rotationZ += parent->RotationZ;
 				}
 
 				rlPushMatrix();
 				rlTranslatef(position.x, position.y, 0);
-				rlRotatef(RotationZ * (float)(180.0f / PI), 0, 0, 1);
+				rlRotatef(rotationZ * (float)(180.0f/PI), 0, 0, 1);
+				rlPushMatrix();
+				rlTranslatef(Position.x, Position.y, 0);
+				rlRotatef(RotationZ * (float)(180.0f/PI), 0, 0, 1);
 				rlScalef(Scale, Scale, Scale);
-				rlPopMatrix();
+				rlPushMatrix();
+				rlTranslatef(child->Position.x, child->Position.y, 0);
+				rlRotatef(child->RotationZ * (float)(180.0f / PI), 0, 0, 1);
 
-				//rlPopMatrix();
+				for (int i = 0; i < child->lines.size() - 1; i = i + 2)
+				{
+					DrawLine3D(child->lines[i], child->lines[i + 1], child->modelColor);
+				}
+
+				rlPopMatrix();
+				rlPopMatrix();
+				rlPopMatrix();
+			}
+			else
+			{
+				child->ChildDraw(Position, RotationZ, Scale);
 			}
 
-			child->ChildDraw(Position, RotationZ, Scale);
 		}
 
 		rlPopMatrix();
@@ -97,6 +113,7 @@ void LineModel::AddChild(LineModel* child)
 {
 	children.push_back(child);
 	child->parents.push_back(this);
+	child->parent = this;
 	child->isChild = true;
 	isParent = true;
 }

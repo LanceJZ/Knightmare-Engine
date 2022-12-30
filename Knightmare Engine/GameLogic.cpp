@@ -26,6 +26,7 @@ void GameLogic::Load()
 	rock2.LoadModel("Models/RockTwo.vec");
 	rock3.LoadModel("Models/RockThree.vec");
 	rock4.LoadModel("Models/RockFour.vec");
+	rock5.LoadModel("Models/RockOne.vec");
 }
 
 bool GameLogic::BeginRun()
@@ -33,10 +34,12 @@ bool GameLogic::BeginRun()
 	rock2.Position = { 2.5f, 2.5f, 0 };
 	rock3.Position = { -2.5f, -2.5f, 0 };
 	rock4.Position = { -2.5f, -2.5f, 0 };
+	rock5.Position = { -2.5f, 2.5f, 0 };
 
 	rock1.AddChild(&rock2);
 	rock1.AddChild(&rock3);
 	rock2.AddChild(&rock4);
+	rock3.AddChild(&rock5);
 
 	rock1.Velocity.x = 0.5f;
 	rock1.Velocity.y = 0.75f;
@@ -58,6 +61,7 @@ void GameLogic::Update(float deltaTime)
 	rock2.Update(deltaTime);
 	rock3.Update(deltaTime);
 	rock4.Update(deltaTime);
+	rock5.Update(deltaTime);
 
 	rock1.CheckScreenEdge();
 }

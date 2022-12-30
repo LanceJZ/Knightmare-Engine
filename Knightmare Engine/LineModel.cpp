@@ -42,10 +42,33 @@ void LineModel::Draw()
 
 	if (isParent)
 	{
+		rlPushMatrix();
+
 		for (auto child : children)
 		{
+			if (isChild)
+			{
+				Vector3 position = { 0 };
+				//rlPushMatrix();
+
+				for (auto parent : parents)
+				{
+					position = Vector3Add(parent->Position, position);
+				}
+
+				rlPushMatrix();
+				rlTranslatef(position.x, position.y, 0);
+				rlRotatef(RotationZ * (float)(180.0f / PI), 0, 0, 1);
+				rlScalef(Scale, Scale, Scale);
+				rlPopMatrix();
+
+				//rlPopMatrix();
+			}
+
 			child->ChildDraw(Position, RotationZ, Scale);
 		}
+
+		rlPopMatrix();
 	}
 
 	Entity::Draw();
@@ -73,6 +96,7 @@ void LineModel::ChildDraw(Vector3 position, float rotationZ, float scale)
 void LineModel::AddChild(LineModel* child)
 {
 	children.push_back(child);
+	child->parents.push_back(this);
 	child->isChild = true;
 	isParent = true;
 }

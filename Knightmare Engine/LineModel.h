@@ -18,6 +18,7 @@ public:
 	void Load();
 	void LoadModel(string fileName);
 	vector <LineModel*> children;
+	vector <LineModel*> parents;
 
 	vector<Vector3> GetModel();
 	vector<Vector3> lines;

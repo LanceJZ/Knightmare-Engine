@@ -111,6 +111,7 @@ void PositionedObject::Z(float z)
 void PositionedObject::AddChild(PositionedObject* child)
 {
 	children.push_back(child);
+	child->parents.push_back(this);
 	child->isChild = true;
 	isParent = true;
 	PositionFromParent = child->Position;

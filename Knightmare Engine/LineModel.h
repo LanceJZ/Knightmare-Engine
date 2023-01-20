@@ -7,7 +7,7 @@
 class LineModel : public Entity
 {
 public:
-	Color modelColor = WHITE;
+	Color ModelColor = WHITE;
 	float Alpha = 255;
 
 	virtual void Update(float deltaTime);
@@ -21,7 +21,7 @@ public:
 	vector <LineModel*> parents;
 
 	vector<Vector3> GetModel();
-	vector<Vector3> lines;
+	vector<Vector3> LinePoints;
 	void SetModel(vector<Vector3> lines);
 
 	LineModel();

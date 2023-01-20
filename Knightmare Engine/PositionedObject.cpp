@@ -9,28 +9,16 @@ void PositionedObject::Update(float deltaTime)
 {
 	Velocity = Vector3Add(Velocity, Acceleration);
 	Position = Vector3Add(Vector3Multiply({ deltaTime, deltaTime, deltaTime }, Velocity), Position);
+	RotationVelocity += RotationAcceleration * deltaTime;
+	Rotation += RotationVelocity * deltaTime;
 
-	if (isParent)
+	if (Rotation > PI * 4)
 	{
-		for (auto child : children)
-		{
-			//child->Position = Vector3Add(PositionFromParent, Position);
-			//child->Update(deltaTime);
-		}
+		Rotation = 0;
 	}
-
-	RotationVelocity = Vector3Add(RotationVelocity, RotationAcceleration);
-	Rotation = Vector3Add(Vector3Multiply({ deltaTime, deltaTime, deltaTime }, RotationVelocity), Rotation);
-
-	RotationZ += RotationVelocity.z * deltaTime;
-
-	if (RotationZ > PI * 4)
+	else if (Rotation < 0)
 	{
-		RotationZ = 0;
-	}
-	else if (RotationZ < 0)
-	{
-		RotationZ = PI * 4;
+		Rotation = PI * 4;
 	}
 }
 
@@ -41,7 +29,7 @@ float PositionedObject::Chase(PositionedObject Chasing)
 
 float PositionedObject::RotateTowardsTargetZ(Vector3 target, float magnitude)
 {
-	return Common::RotateTowardsTargetZ(Position, target, RotationZ, magnitude);
+	return Common::RotateTowardsTargetZ(Position, target, Rotation, magnitude);
 }
 
 float PositionedObject::AngleFromVectorsZ(Vector3 target)
@@ -68,7 +56,7 @@ Vector3 PositionedObject::RandomVelocity(float magnitude)
 
 Vector3 PositionedObject::VelocityFromAngleZ(float magnitude)
 {
-	return { (float)cos(RotationZ) * magnitude,	(float)sin(RotationZ) * magnitude, 0 };
+	return { (float)cos(Rotation) * magnitude,	(float)sin(Rotation) * magnitude, 0 };
 }
 
 Vector3 PositionedObject::VelocityFromAngleZ(float angle, float magnitude)
@@ -106,15 +94,6 @@ void PositionedObject::Y(float y)
 void PositionedObject::Z(float z)
 {
 	Position.z = z;
-}
-
-void PositionedObject::AddChild(PositionedObject* child)
-{
-	children.push_back(child);
-	child->parents.push_back(this);
-	child->isChild = true;
-	isParent = true;
-	PositionFromParent = child->Position;
 }
 
 void PositionedObject::CheckScreenEdge()
@@ -192,7 +171,7 @@ void PositionedObject::LeavePlay(float turnSpeed, float speed)
 
 void PositionedObject::RotateVelocity(Vector3 position, float turnSpeed, float speed)
 {
-	RotationVelocity.z = RotateTowardsTargetZ(position, turnSpeed);
-	Velocity = VelocityFromAngleZ(RotationZ, speed);
+	RotationVelocity = RotateTowardsTargetZ(position, turnSpeed);
+	Velocity = VelocityFromAngleZ(Rotation, speed);
 }
 

@@ -4,8 +4,7 @@
 void LineModel::Update(float deltaTime)
 {
 	Entity::Update(deltaTime);
-
-	modelColor.a = (char)Alpha;
+	ModelColor.a = (char)Alpha;
 }
 
 void LineModel::Draw()
@@ -15,36 +14,33 @@ void LineModel::Draw()
 		return;
 	}
 
-	if (lines.size() < 2)
+	if (LinePoints.size() < 2)
 	{
 		return;
 	}
 
 	rlPushMatrix();
 
-	if (isChild)
+	for (auto parent : parents)
 	{
-		for (auto parent : parents)
-		{
-			rlTranslatef(parent->Position.x, parent->Position.y, 0);
-			rlRotatef(parent->RotationZ * (float)(180.0f / PI), 0, 0, 1);
-		}
+		rlTranslatef(parent->Position.x, parent->Position.y, Position.z);
+		rlRotatef(parent->Rotation * (float)(180.0f / PI), RotationAxis.x, RotationAxis.y, RotationAxis.z);
 	}
 
-	rlTranslatef(Position.x, Position.y, 0);
-	rlRotatef(RotationZ * (float)(180.0f / PI), 0, 0, 1);
+	rlTranslatef(Position.x, Position.y, Position.z);
+	rlRotatef(Rotation * (float)(180.0f / PI), RotationAxis.x, RotationAxis.y, RotationAxis.z);
 	rlScalef(Scale, Scale, Scale);
 	rlBegin(RL_LINES);
-	rlColor4ub(modelColor.r, modelColor.g, modelColor.b, modelColor.a);
+	rlColor4ub(ModelColor.r, ModelColor.g, ModelColor.b, ModelColor.a);
 
-	for (int i = 0; i < lines.size() - 1; i++)
+	for (int i = 0; i < LinePoints.size() - 1; i++)
 	{
-		rlVertex3f(lines[i].x, lines[i].y, lines[i].z);
-		rlVertex3f(lines[i + 1].x, lines[i + 1].y, lines[i + 1].z);
+		rlVertex3f(LinePoints[i].x, LinePoints[i].y, LinePoints[i].z);
+		rlVertex3f(LinePoints[i + 1].x, LinePoints[i + 1].y, LinePoints[i + 1].z);
 	}
 
-	rlEnd();
 	rlPopMatrix();
+	rlEnd();
 }
 
 void LineModel::AddChild(LineModel* child)
@@ -78,18 +74,18 @@ void LineModel::LoadModel(string fileName)
 	if (FileExists(const_cast<char*>(fileName.c_str())))
 	{
 		string linestemp = LoadFileText(const_cast<char*>(fileName.c_str()));
-		lines = ConvertStringToVector(linestemp);
+		LinePoints = ConvertStringToVector(linestemp);
 	}
 }
 
 vector<Vector3> LineModel::GetModel()
 {
-	return lines;
+	return LinePoints;
 }
 
 void LineModel::SetModel(vector<Vector3> lines)
 {
-	LineModel::lines = lines;
+	LineModel::LinePoints = lines;
 }
 
 LineModel::LineModel()
@@ -159,7 +155,7 @@ void LineModel::DrawLines(vector <Vector3> points, Vector3 rotationAxis, Color c
 
 		rlPushMatrix();
 		rlTranslatef(Position.x, Position.y, 0);
-		rlRotatef(RotationZ * (float)(180.0f / PI), rotationAxis.x, rotationAxis.y, rotationAxis.z);
+		rlRotatef(Rotation * (float)(180.0f / PI), rotationAxis.x, rotationAxis.y, rotationAxis.z);
 		rlBegin(RL_LINES);
 		rlColor4ub(color.r, color.g, color.b, color.a);
 
@@ -179,10 +175,10 @@ void LineModel::DrawLines(Color color)
 	rlBegin(RL_LINES);
 	rlColor4ub(color.r, color.g, color.b, color.a);
 
-	for (int i = 0; i < lines.size() - 1; i++)
+	for (int i = 0; i < LinePoints.size() - 1; i++)
 	{
-		rlVertex3f(lines[i].x, lines[i].y, lines[i].z);
-		rlVertex3f(lines[i + 1].x, lines[i + 1].y, lines[i + 1].z);
+		rlVertex3f(LinePoints[i].x, LinePoints[i].y, LinePoints[i].z);
+		rlVertex3f(LinePoints[i + 1].x, LinePoints[i + 1].y, LinePoints[i + 1].z);
 	}
 
 	rlEnd();

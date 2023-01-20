@@ -40,9 +40,9 @@ bool GameLogic::BeginRun()
 
 	rock1.Velocity.x = 0.5f;
 	rock1.Velocity.y = 0.75f;
-	rock1.RotationVelocity.z = 0.1f;
-	rock2.RotationVelocity.z = 0.5f;
-	rock3.RotationVelocity.z = -0.25f;
+	rock1.RotationVelocity = 0.1f;
+	rock2.RotationVelocity = 0.5f;
+	rock3.RotationVelocity = -0.25f;
 
 	return false;
 }

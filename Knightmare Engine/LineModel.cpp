@@ -1,11 +1,6 @@
 #include "LineModel.h"
 #include "rlgl.h"
 
-void LineModel::Input()
-{
-
-}
-
 void LineModel::Update(float deltaTime)
 {
 	Entity::Update(deltaTime);
@@ -25,97 +20,52 @@ void LineModel::Draw()
 		return;
 	}
 
-	if (!isChild)
+	rlPushMatrix();
+
+	if (isChild)
 	{
-		rlPushMatrix();
-		rlTranslatef(Position.x, Position.y, 0);
-		rlRotatef(RotationZ * (float)(180.0f/PI), 0, 0, 1);
-		rlScalef(Scale, Scale, Scale);
-
-		for (int i = 0; i < lines.size() - 1; i = i + 2)
+		for (auto parent : parents)
 		{
-			DrawLine3D(lines[i], lines[i + 1], modelColor);
+			rlTranslatef(parent->Position.x, parent->Position.y, 0);
+			rlRotatef(parent->RotationZ * (float)(180.0f / PI), 0, 0, 1);
 		}
-
-		rlPopMatrix();
 	}
 
-	if (isParent)
-	{
-		rlPushMatrix();
-
-		for (auto child : children)
-		{
-			if (isChild)
-			{
-				Vector3 position = { 0 };
-				float rotationZ = 0;
-
-				for (auto parent : parents)
-				{
-					position = Vector3Add(parent->Position, position);
-					rotationZ += parent->RotationZ;
-				}
-
-				rlPushMatrix();
-				rlTranslatef(position.x, position.y, 0);
-				rlRotatef(rotationZ * (float)(180.0f/PI), 0, 0, 1);
-				rlPushMatrix();
-				rlTranslatef(Position.x, Position.y, 0);
-				rlRotatef(RotationZ * (float)(180.0f/PI), 0, 0, 1);
-				rlScalef(Scale, Scale, Scale);
-				rlPushMatrix();
-				rlTranslatef(child->Position.x, child->Position.y, 0);
-				rlRotatef(child->RotationZ * (float)(180.0f / PI), 0, 0, 1);
-
-				for (int i = 0; i < child->lines.size() - 1; i = i + 2)
-				{
-					DrawLine3D(child->lines[i], child->lines[i + 1], child->modelColor);
-				}
-
-				rlPopMatrix();
-				rlPopMatrix();
-				rlPopMatrix();
-			}
-			else
-			{
-				child->ChildDraw(Position, RotationZ, Scale);
-			}
-
-		}
-
-		rlPopMatrix();
-	}
-
-	Entity::Draw();
-}
-
-void LineModel::ChildDraw(Vector3 position, float rotationZ, float scale)
-{
-	rlPushMatrix();
-	rlTranslatef(position.x, position.y, 0);
-	rlRotatef(rotationZ * (float)(180.0f/PI), 0, 0, 1);
-	rlPushMatrix();
 	rlTranslatef(Position.x, Position.y, 0);
-	rlRotatef(RotationZ * (float)(180.0f/PI), 0, 0, 1);
-	rlScalef(scale, scale, scale);
+	rlRotatef(RotationZ * (float)(180.0f / PI), 0, 0, 1);
+	rlScalef(Scale, Scale, Scale);
+	rlBegin(RL_LINES);
+	rlColor4ub(modelColor.r, modelColor.g, modelColor.b, modelColor.a);
 
-	for (int i = 0; i < lines.size() - 1; i = i + 2)
+	for (int i = 0; i < lines.size() - 1; i++)
 	{
-		DrawLine3D(lines[i], lines[i + 1], modelColor);
+		rlVertex3f(lines[i].x, lines[i].y, lines[i].z);
+		rlVertex3f(lines[i + 1].x, lines[i + 1].y, lines[i + 1].z);
 	}
 
-	rlPopMatrix();
+	rlEnd();
 	rlPopMatrix();
 }
 
 void LineModel::AddChild(LineModel* child)
 {
+
+	for (auto parent : parents)
+	{
+		parent->AddChildren(child);
+	}
+
 	children.push_back(child);
 	child->parents.push_back(this);
-	child->parent = this;
 	child->isChild = true;
 	isParent = true;
+}
+
+void LineModel::AddChildren(LineModel* child)
+{
+	child->parents.push_back(this);
+	isParent = true;
+	child->isChild = true;
 }
 
 void LineModel::Load()
@@ -199,4 +149,41 @@ vector<Vector3> LineModel::ConvertStringToVector(string linesString)
 	}
 
 	return linesConverted;
+}
+
+void LineModel::DrawLines(vector <Vector3> points, Vector3 rotationAxis, Color color)
+{
+	if (points.size() >= 2)
+	{
+		//if (rlCheckBufferLimit(pointsCount)) rlglDraw();
+
+		rlPushMatrix();
+		rlTranslatef(Position.x, Position.y, 0);
+		rlRotatef(RotationZ * (float)(180.0f / PI), rotationAxis.x, rotationAxis.y, rotationAxis.z);
+		rlBegin(RL_LINES);
+		rlColor4ub(color.r, color.g, color.b, color.a);
+
+		for (int i = 0; i < points.size() - 1; i++)
+		{
+			rlVertex3f(points[i].x, points[i].y, points[i].z);
+			rlVertex3f(points[i + 1].x, points[i + 1].y, points[i + 1].z);
+		}
+
+		rlEnd();
+		rlPopMatrix();
+	}
+}
+
+void LineModel::DrawLines(Color color)
+{
+	rlBegin(RL_LINES);
+	rlColor4ub(color.r, color.g, color.b, color.a);
+
+	for (int i = 0; i < lines.size() - 1; i++)
+	{
+		rlVertex3f(lines[i].x, lines[i].y, lines[i].z);
+		rlVertex3f(lines[i + 1].x, lines[i + 1].y, lines[i + 1].z);
+	}
+
+	rlEnd();
 }

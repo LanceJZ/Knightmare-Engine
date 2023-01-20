@@ -32,6 +32,5 @@ private:
 	LineModel rock2;
 	LineModel rock3;
 	LineModel rock4;
-	LineModel rock5;
 };
 

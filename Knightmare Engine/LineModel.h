@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include <vector>
 #include <string>
+#include "rlgl.h"
 
 class LineModel : public Entity
 {
@@ -9,17 +10,15 @@ public:
 	Color modelColor = WHITE;
 	float Alpha = 255;
 
-	virtual void Input();
 	virtual void Update(float deltaTime);
 	virtual void Draw();
-	virtual void ChildDraw(Vector3 position, float rotationZ, float scale);
 	virtual void AddChild(LineModel* child);
+	virtual void AddChildren(LineModel* child);
 
 	void Load();
 	void LoadModel(string fileName);
 	vector <LineModel*> children;
 	vector <LineModel*> parents;
-	LineModel* parent;
 
 	vector<Vector3> GetModel();
 	vector<Vector3> lines;
@@ -30,4 +29,6 @@ public:
 
 private:
 	vector<Vector3> ConvertStringToVector(string linesString);
+	void DrawLines(vector <Vector3> points, Vector3 rotationAxis, Color color);
+	void DrawLines(Color color);
 };

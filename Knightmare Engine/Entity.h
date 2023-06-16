@@ -8,16 +8,15 @@ public:
 	bool BeenHit = false;
 	float Scale = 1;
 
-	Sound Sound01;
-	Sound Sound02;
-	Sound Sound03;
-	Sound Sound04;
-
+	bool Initialize();
 	virtual void Update(float deltaTime);
 	virtual void Draw();
 
 	bool CirclesIntersect(Entity* target);
+	bool CirclesIntersectBullet(Entity* target);
 
 private:
+	Ray TheRay = { 0 };
+	RayCollision TheRayCollision = { 0 };
 };
 

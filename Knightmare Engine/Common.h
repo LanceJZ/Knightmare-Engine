@@ -1,17 +1,22 @@
 #pragma once
+#pragma warning ( push )
+#pragma warning ( disable : 26495 )
+#pragma warning ( pop )
+
 #include <random>
 #include "raylib.h"
 #include "raymath.h"
 
-using namespace std;
+#define MAX(a, b) ((a)>(b)? (a) : (b))
+#define MIN(a, b) ((a)<(b)? (a) : (b))
 
 class Common
 {
 public:
-	float GameScreenWidth = { 0 };
-	float GameScreenHeight = { 0 };
+	float GameScreenHalfWidth = { 0 };
+	float GameScreenHalfHeight = { 0 };
 
-	bool Initialize();
+	virtual bool Initialize();
 	float GetRandomScreenY();
 	float GetRandomFloat(float min, float max);
 	float GetRandomRadian();
@@ -22,6 +27,5 @@ public:
 	Vector3 GetVelocityFromAngleZ(float rotation, float magnitude);
 
 private:
-	random_device rd;
+	std::random_device rd;
 };
-

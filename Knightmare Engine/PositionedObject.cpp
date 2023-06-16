@@ -1,25 +1,26 @@
 #include "PositionedObject.h"
 
-PositionedObject::PositionedObject()
+bool PositionedObject::Initialize()
 {
+	Common::Initialize();
 
+	WindowWidth = (float)(GetScreenWidth() * 0.5f);
+	WindowHeight = (float)(GetScreenHeight() * 0.5f);
+
+	return false;
 }
 
 void PositionedObject::Update(float deltaTime)
 {
+	LastFramePosition = Position;
+
 	Velocity = Vector3Add(Velocity, Acceleration);
 	Position = Vector3Add(Vector3Multiply({ deltaTime, deltaTime, deltaTime }, Velocity), Position);
-	RotationVelocity += RotationAcceleration * deltaTime;
-	Rotation += RotationVelocity * deltaTime;
 
-	if (Rotation > PI * 4)
-	{
-		Rotation = 0;
-	}
-	else if (Rotation < 0)
-	{
-		Rotation = PI * 4;
-	}
+	Rotation = AddRotationVelAcc(Rotation, RotationVelocity, RotationAcceleration, deltaTime);
+	RotationX = AddRotationVelAcc(RotationX, RotationVelocityX, RotationAccelerationX, deltaTime);
+	RotationY = AddRotationVelAcc(RotationY, RotationVelocityY, RotationAccelerationY, deltaTime);
+	RotationZ = AddRotationVelAcc(RotationZ, RotationVelocityZ, RotationAccelerationZ, deltaTime);
 }
 
 float PositionedObject::Chase(PositionedObject Chasing)
@@ -32,19 +33,9 @@ float PositionedObject::RotateTowardsTargetZ(Vector3 target, float magnitude)
 	return Common::RotateTowardsTargetZ(Position, target, Rotation, magnitude);
 }
 
-float PositionedObject::AngleFromVectorsZ(Vector3 target)
-{
-	return (atan2f(target.y - Position.y, target.x - Position.x));
-}
-
-float PositionedObject::AngleFromVectorsZ(Vector3 origin, Vector3 target)
-{
-	return (atan2(target.y - origin.y, target.x - origin.x));
-}
-
 float PositionedObject::AngleFromVectorZ(Vector3 target)
 {
-	return (float)atan2(target.y - Y(), target.x - X());
+	return (atan2f(target.y - Position.y, target.x - Position.x));
 }
 
 Vector3 PositionedObject::RandomVelocity(float magnitude)
@@ -82,18 +73,81 @@ float PositionedObject::Z()
 void PositionedObject::X(float x)
 {
 	Position.x = x;
-	Position2.x = x;
+	LastFramePosition.x = x;
 }
 
 void PositionedObject::Y(float y)
 {
 	Position.y = y;
-	Position2.y = y;
+	LastFramePosition.y = y;
 }
 
 void PositionedObject::Z(float z)
 {
 	Position.z = z;
+	LastFramePosition.z = z;
+}
+
+void PositionedObject::AddChild(PositionedObject* child)
+{
+	for (auto parent : Parents)
+	{
+		parent->AddChildren(child);
+	}
+
+	Children.push_back(child);
+	child->Parents.push_back(this);
+	child->IsChild = true;
+	child->ChildNumber = (int)(Children.size() - (size_t)1);
+	IsParent = true;
+}
+
+void PositionedObject::AddChildren(PositionedObject* child)
+{
+	child->Parents.push_back(this);
+	child->IsChild = true;
+}
+
+void PositionedObject::RemoveChild(PositionedObject* child)
+{
+
+}
+
+void PositionedObject::RemoveFromParents(PositionedObject* child)
+{
+
+}
+
+void PositionedObject::DisconnectChild(PositionedObject* child)
+{
+	if (child->IsParent)
+		return;
+
+	if (!child->IsConnectedChild)
+		return;
+
+	child->IsConnectedChild = false;
+	child->ChildPosition = child->Position;
+	child->ChildRotation = child->Rotation;
+
+	for (auto parent : child->Parents)
+	{
+		child->Position = Vector3Add(parent->Position, child->Position);
+		child->Rotation += parent->Rotation;
+	}
+}
+
+void PositionedObject::ConnectChild(PositionedObject* child)
+{
+	if (child->IsParent)
+		return;
+
+	if (child->IsConnectedChild)
+		return;
+
+	child->IsConnectedChild = true;
+	child->Position = child->ChildPosition;
+	child->Rotation = child->ChildRotation;
 }
 
 void PositionedObject::CheckScreenEdge()
@@ -126,6 +180,56 @@ void PositionedObject::CheckScreenEdgeY()
 	{
 		Y(WindowHeight);
 	}
+}
+
+bool PositionedObject::ScreenEdgeBoundY()
+{
+	bool hitBound = false;
+
+	if (Y() > WindowHeight)
+	{
+		Y(WindowHeight);
+		hitBound = true;
+	}
+	else if (Y() < -WindowHeight)
+	{
+		Y(-WindowHeight);
+		hitBound = true;
+	}
+
+	if (hitBound)
+	{
+		Acceleration.y = 0;
+		Velocity.y = 0;
+		return true;
+	}
+
+	return false;
+}
+
+bool PositionedObject::ScreenEdgeBoundY(float topOffset, float bottomOffset)
+{
+	bool hitBound = false;
+
+	if (Y() > WindowHeight - topOffset)
+	{
+		Y(WindowHeight - topOffset);
+		hitBound = true;
+	}
+	else if (Y() < -WindowHeight + bottomOffset)
+	{
+		Y(-WindowHeight + bottomOffset);
+		hitBound = true;
+	}
+
+	if (hitBound)
+	{
+		Acceleration.y = 0;
+		Velocity.y = 0;
+		return true;
+	}
+
+	return false;
 }
 
 bool PositionedObject::OffScreen()
@@ -175,3 +279,48 @@ void PositionedObject::RotateVelocity(Vector3 position, float turnSpeed, float s
 	Velocity = VelocityFromAngleZ(Rotation, speed);
 }
 
+void PositionedObject::CheckPlayfieldSidesWarp(float left, float right)
+{
+	if (X() > GetScreenWidth() * right + (GetScreenWidth() * 0.5f))
+	{
+		X(-GetScreenWidth() * left + (GetScreenWidth() * 0.5f));
+	}
+	else if (X() < -GetScreenWidth() * left + (GetScreenWidth() * 0.5f))
+	{
+		X(GetScreenWidth() * right + (GetScreenWidth() * 0.5f));
+	}
+}
+
+void PositionedObject::CheckPlayfieldHeightWarp(float top, float bottom)
+{
+	if (Y() > GetScreenHeight() * top + (GetScreenHeight() * 0.5f))
+	{
+		Y(-GetScreenHeight() * bottom + (GetScreenHeight() * 0.5f));
+	}
+	else if (Y() < -GetScreenHeight() * bottom + (GetScreenHeight() * 0.5f))
+	{
+		Y(GetScreenHeight() * top + (GetScreenHeight() * 0.5f));
+	}
+}
+
+float PositionedObject::RadianSpin(float radian)
+{
+	if (radian > PI * 2)
+	{
+		radian = 0;
+	}
+	else if (radian < 0)
+	{
+		radian = PI * 2;
+	}
+
+	return radian;
+}
+
+float PositionedObject::AddRotationVelAcc(float rotation, float rotationVelocity, float rotationAcceleration, float deltaTime)
+{
+	rotationVelocity += rotationAcceleration * deltaTime;
+	rotation += rotationVelocity * deltaTime;
+
+	return rotation;
+}

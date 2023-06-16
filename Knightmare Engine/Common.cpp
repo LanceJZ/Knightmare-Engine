@@ -2,19 +2,21 @@
 
 bool Common::Initialize()
 {
+	GameScreenHalfHeight = GetScreenHeight() * 0.5f;
+	GameScreenHalfWidth = GetScreenWidth() * 0.5f;
 
 	return false;
 }
 
 float Common::GetRandomScreenY()
 {
-	return GetRandomFloat(-GameScreenHeight, GameScreenHeight);
+	return GetRandomFloat(-GameScreenHalfHeight, GameScreenHalfHeight);
 }
 
 float Common::GetRandomFloat(float min, float max)
 {
-	default_random_engine eng(rd());
-	uniform_real_distribution<float> distr(min, max);
+	std::default_random_engine eng(rd());
+	std::uniform_real_distribution<float> distr(min, max);
 
 	return distr(eng);
 }
@@ -62,7 +64,7 @@ float Common::GetAngleFromVectorsZ(Vector3 origin, Vector3 target)
 
 Vector3 Common::GetRandomVelocity(float speed)
 {
-	return GetRandomVelocity(speed, GetRandomRadian());
+	return GetVelocityFromAngleZ(GetRandomRadian(), speed);
 }
 
 Vector3 Common::GetRandomVelocity(float speed, float radianDirection)

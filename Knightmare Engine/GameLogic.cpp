@@ -30,19 +30,24 @@ void GameLogic::Load()
 
 bool GameLogic::BeginRun()
 {
-	rock2.Position = { 2.5f, 2.5f, 0 };
-	rock3.Position = { 2.5f, -2.5f, 0 };
-	rock4.Position = { -2.5f, -2.5f, 0 };
+	rock1.Position = { -10.0f, -10.0f, 0 };
+	rock2.Position = { 8.5f, 6.5f, 0 };
+	rock3.Position = { 1.5f, -1.5f, 0 };
+	rock4.Position = { -3.5f, -3.5f, 0 };
+	rock2.Scale = 0.5f;
+	rock3.Scale = 0.25f;
+	rock4.Scale = 0.4f;
 
 	rock1.AddChild(&rock2);
 	rock2.AddChild(&rock4);
 	rock4.AddChild(&rock3);
 
-	rock1.Velocity.x = 0.5f;
 	rock1.Velocity.y = 0.75f;
+	rock1.Velocity.x = 0.5f;
 	rock1.RotationVelocity = 0.1f;
 	rock2.RotationVelocity = 0.5f;
-	rock3.RotationVelocity = -0.25f;
+	rock3.RotationVelocity = -7.2f;
+	rock4.RotationVelocity = 0.15f;
 
 	return false;
 }

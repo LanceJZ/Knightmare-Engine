@@ -10,8 +10,8 @@ public:
 	int ChildNumber = 0;
 	float MaxSpeed = 0;
 	float Radius = 0;
-	float WindowWidth = (float)GetScreenWidth() / 2.0f; //Half Game Window Width.
-	float WindowHeight = (float)GetScreenHeight() / 2.0f; //Half Game Window Height.
+	float WindowWidth = 0;
+	float WindowHeight = 0;
 	float Rotation = 0;
 	float RotationX = 0;
 	float RotationY = 0;

@@ -2,52 +2,49 @@
 
 GameLogic::GameLogic()
 {
-	float per = 42.75f;
-	float playScreenW = GetScreenWidth() / per;
-	float playScreenH = GetScreenHeight() / per;
-
-	rock1.WindowWidth = playScreenW;
-	rock1.WindowHeight = playScreenH;
-	rock2.WindowWidth = playScreenW;
-	rock2.WindowHeight = playScreenH;
-	rock3.WindowWidth = playScreenW;
-	rock3.WindowHeight = playScreenH;
-	rock4.WindowWidth = playScreenW;
-	rock4.WindowHeight = playScreenH;
 }
 
 GameLogic::~GameLogic()
 {
 }
 
+void GameLogic::Initialize()
+{
+	Sun.Initialize();
+	Earth.Initialize();
+	Moon.Initialize();
+	MoonSat.Initialize();
+}
+
 void GameLogic::Load()
 {
-	rock1.LoadModel("Models/RockOne.vec");
-	rock2.LoadModel("Models/RockTwo.vec");
-	rock3.LoadModel("Models/RockThree.vec");
-	rock4.LoadModel("Models/RockFour.vec");
+	Sun.SetModel(Content.LoadAndGetLineModel("RockOne"));
+	Earth.SetModel(Content.LoadAndGetLineModel("RockTwo"));
+	Moon.SetModel(Content.LoadAndGetLineModel("RockFour"));
+	MoonSat.SetModel(Content.LoadAndGetLineModel("RockThree"));
 }
 
 bool GameLogic::BeginRun()
 {
-	rock1.Position = { -10.0f, -10.0f, 0 };
-	rock2.Position = { 8.5f, 6.5f, 0 };
-	rock3.Position = { 1.5f, -1.5f, 0 };
-	rock4.Position = { -3.5f, -3.5f, 0 };
-	rock2.Scale = 0.5f;
-	rock3.Scale = 0.25f;
-	rock4.Scale = 0.4f;
+	Sun.Position = { -200.0f, -150.0f, 0 };
+	Earth.Position = { 100.5f, 120.5f, 0 };
+	Moon.Position = { -40.5f, -40.5f, 0 };
+	MoonSat.Position = { 10.5f, -20.5f, 0 };
+	Sun.Scale = 20.0f;
+	Earth.Scale = 8.5f;
+	Moon.Scale = 4.4f;
+	MoonSat.Scale = 2.25f;
 
-	rock1.AddChild(&rock2);
-	rock2.AddChild(&rock4);
-	rock4.AddChild(&rock3);
+	Sun.AddChild(&Earth);
+	Earth.AddChild(&Moon);
+	Moon.AddChild(&MoonSat);
 
-	rock1.Velocity.y = 0.75f;
-	rock1.Velocity.x = 0.5f;
-	rock1.RotationVelocity = 0.1f;
-	rock2.RotationVelocity = 0.5f;
-	rock3.RotationVelocity = -7.2f;
-	rock4.RotationVelocity = 0.15f;
+	Sun.Velocity.y = 5.75f;
+	Sun.Velocity.x = 2.5f;
+	Sun.RotationVelocity = 0.1f;
+	Earth.RotationVelocity = 0.5f;
+	Moon.RotationVelocity = 0.15f;
+	MoonSat.RotationVelocity = -7.2f;
 
 	return false;
 }
@@ -59,20 +56,20 @@ void GameLogic::Input()
 
 void GameLogic::Update(float deltaTime)
 {
-	rock1.Update(deltaTime);
-	rock2.Update(deltaTime);
-	rock3.Update(deltaTime);
-	rock4.Update(deltaTime);
+	Sun.Update(deltaTime);
+	Earth.Update(deltaTime);
+	MoonSat.Update(deltaTime);
+	Moon.Update(deltaTime);
 
-	rock1.CheckScreenEdge();
+	Sun.CheckScreenEdge();
 }
 
 void GameLogic::Draw3D()
 {
-	rock1.Draw();
-	rock2.Draw();
-	rock3.Draw();
-	rock4.Draw();
+	Sun.Draw();
+	Earth.Draw();
+	MoonSat.Draw();
+	Moon.Draw();
 }
 
 void GameLogic::Draw2D()

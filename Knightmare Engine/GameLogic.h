@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "LineModel.h"
+#include "ContentManager.h"
 
 enum GameState
 {
@@ -19,6 +20,7 @@ public:
 	GameLogic();
 	virtual ~GameLogic();
 
+	void Initialize();
 	void Load();
 	bool BeginRun();
 
@@ -28,9 +30,11 @@ public:
 	virtual void Draw2D();
 
 private:
-	LineModel rock1;
-	LineModel rock2;
-	LineModel rock3;
-	LineModel rock4;
+	LineModel Sun;
+	LineModel Earth;
+	LineModel MoonSat;
+	LineModel Moon;
+
+	ContentManager Content;
 };
 

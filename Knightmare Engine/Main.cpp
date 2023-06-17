@@ -5,7 +5,7 @@ int main()
 {
     Game game;
 
-    game.Initialise();
+    game.Initialize();
     game.Load();
     game.BeginRun();
     game.GameLoop();

@@ -11,15 +11,15 @@ public:
 	~Game();
 
 	void GameLoop();
-	bool Initialise();
+	bool Initialize();
 	bool Load();
 	bool BeginRun();
 
-	Camera camera = { 0 };
+	Camera TheCamera = { 0 };
 
 
 private:
-	GameLogic* gameLogic;
+	GameLogic TheGameLogic;
 
 	void ProcessInput();
 	void Update(float deltaTime);

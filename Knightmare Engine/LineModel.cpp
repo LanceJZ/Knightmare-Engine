@@ -52,11 +52,6 @@ void LineModel::Draw()
 	rlEnd();
 }
 
-void LineModel::Load()
-{
-
-}
-
 void LineModel::LoadModel(std::string fileName)
 {
 	if (FileExists(fileName.c_str()))
@@ -66,6 +61,11 @@ void LineModel::LoadModel(std::string fileName)
 	}
 }
 
+LineModelPoints LineModel::GetLineModel()
+{
+	return Lines;
+}
+
 std::vector<Vector3> LineModel::GetModel()
 {
 	return LinePoints;
@@ -73,7 +73,14 @@ std::vector<Vector3> LineModel::GetModel()
 
 void LineModel::SetModel(std::vector<Vector3> lines)
 {
-	LineModel::LinePoints = lines;
+	LinePoints = lines;
+	Lines.linePoints = lines;
+}
+
+void LineModel::SetModel(LineModelPoints lines)
+{
+	Lines = lines;
+	LinePoints = lines.linePoints;
 }
 
 std::vector<Vector3> LineModel::ConvertStringToVector(std::string linesString)

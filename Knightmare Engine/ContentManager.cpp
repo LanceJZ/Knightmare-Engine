@@ -23,6 +23,7 @@ ContentManager::~ContentManager()
 	}
 
 	LoadedModels.clear();
+	LoadedLineModels.clear();
 	LoadedSounds.clear();
 	LoadedTextures.clear();
 }
@@ -43,7 +44,14 @@ int ContentManager::LoadTheModel(std::string modelFileName)
 {
 	LoadedModels.push_back(LoadModelWithTexture(modelFileName));
 
-	return LoadedModels.size()-1;
+	return LoadedModels.size() - 1;
+}
+
+int ContentManager::LoadTheLineModel(std::string modelFileName)
+{
+	LoadedLineModels.push_back(LoadLineModel(modelFileName));
+
+	return LoadedLineModels.size() - 1;
 }
 
 int ContentManager::LoadTheSound(std::string soundFileName)
@@ -68,6 +76,16 @@ Model& ContentManager::GetModel(int modelNumber)
 Model ContentManager::LoadAndGetModel(std::string modelFilename)
 {
 	return GetModel(LoadTheModel(modelFilename));
+}
+
+LineModelPoints& ContentManager::GetLineModel(int modelNumber)
+{
+	return LoadedLineModels[modelNumber];
+}
+
+LineModelPoints ContentManager::LoadAndGetLineModel(std::string modelFileName)
+{
+	return GetLineModel(LoadTheLineModel(modelFileName));
 }
 
 Sound& ContentManager::GetSound(int soundNumber)
@@ -164,4 +182,80 @@ Texture ContentManager::LoadTextureFile(std::string textureFileName)
 	}
 
 	return LoadTexture(namePNG.c_str());
+}
+//Load VEC file only, without path or ext.
+LineModelPoints ContentManager::LoadLineModel(std::string fileName)
+{
+	LineModelPoints points;
+
+	std::string path = "Models/";
+	std::string nameVEC = path;
+	nameVEC.append(fileName);
+	nameVEC.append(".vec");
+
+	if (FileExists(nameVEC.c_str()))
+	{
+		std::string linesTemp = LoadFileText(nameVEC.c_str());
+		points.linePoints = ConvertStringToPoints(linesTemp);
+	}
+	else
+	{
+		points.linePoints.push_back({1,1,0});
+		points.linePoints.push_back({-1,1,0});
+		points.linePoints.push_back({-1,-1,0});
+		points.linePoints.push_back({1,-1,0});
+		points.linePoints.push_back({1,1,0});
+	}
+
+	return points;
+}
+
+std::vector<Vector3>  ContentManager::ConvertStringToPoints(std::string linesString)
+{
+	bool isNumber = false;
+	float x = 0;
+	float y = 0;
+	float z = 0;
+	std::string number;
+	std::string onAxis;
+	Vector3 line = { 0 };
+	std::vector<Vector3> linesConverted;
+
+	for (auto character : linesString)
+	{
+		if (character > 44 && character < 58)
+		{
+			number.append(1, character);
+		}
+		else
+		{
+			if (character == 88)
+			{
+				onAxis = "X";
+			}
+			else if (character == 89)
+			{
+				onAxis = "Y";
+
+				line.x = stof(number);
+				number = "";
+			}
+			else if (character == 90)
+			{
+				onAxis = "Z";
+
+				line.y = stof(number);
+				number = "";
+			}
+			else if (character == 125)
+			{
+				line.z = stof(number);
+				number = "";
+
+				linesConverted.push_back(line);
+			}
+		}
+	}
+
+	return linesConverted;
 }

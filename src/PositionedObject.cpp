@@ -105,7 +105,7 @@ void PositionedObject::Z(float z)
 	LastFramePosition.z = z;
 }
 
-void PositionedObject::AddParent(std::shared_ptr<PositionedObject> parent)
+void PositionedObject::SetParent(std::shared_ptr<PositionedObject> parent)
 {
 	for (auto myParent : parent->Parents)
 	{

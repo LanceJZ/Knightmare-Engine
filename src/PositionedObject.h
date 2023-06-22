@@ -49,7 +49,7 @@ public:
 	Vector3 VelocityFromAngleZ(float magnitude);
 	Vector3 VelocityFromAngleZ(float angle, float magnitude);
 	Quaternion EulerToQuaternion(float yaw, float pitch, float roll);
-	void AddParent(std::shared_ptr<PositionedObject> parent);
+	void SetParent(std::shared_ptr<PositionedObject> parent);
 	void RemoveChild(PositionedObject* child);
 	void RemoveFromParents(PositionedObject* child);
 	void DisconnectChild(PositionedObject* child);

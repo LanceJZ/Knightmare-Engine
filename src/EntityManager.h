@@ -31,6 +31,6 @@ public:
 	std::vector<std::shared_ptr<Model3D>> Model3Ds;
 
 private:
-	Camera* TheCamera;
+	Camera* TheCamera = {};
 };
 

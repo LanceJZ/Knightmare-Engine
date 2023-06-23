@@ -93,17 +93,20 @@ void EntityManager::Draw()
 void EntityManager::AddEntity(std::shared_ptr<Entity> entity)
 {
 	Entities.push_back(entity);
+	Entities[Entities.size() - 1]->Initialize();
 }
 
 void EntityManager::AddLineModel(std::shared_ptr<LineModel> model)
 {
 	LineModels.push_back(model);
+	LineModels[LineModels.size() - 1]->Initialize();
 }
 
 void EntityManager::AddModel3D(std::shared_ptr<Model3D> model, Camera* camera)
 {
 	TheCamera = camera;
 	Model3Ds.push_back(model);
+	Model3Ds[Model3Ds.size() - 1]->Initialize();
 }
 
 std::shared_ptr<Entity> EntityManager::CreateEntity()

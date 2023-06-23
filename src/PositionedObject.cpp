@@ -54,6 +54,29 @@ Vector3 PositionedObject::VelocityFromAngleZ(float angle, float magnitude)
 {
 	return { cosf(angle) * magnitude, (float)sin(angle) * magnitude, 0 };
 }
+//Returns Vector3 acceleration based on acceleration amount this frame, to a max amount.
+Vector3 PositionedObject::AccelerationToMaxAtRotation(float accelerationAmount, float topSpeed, float deltaTime)
+{
+	return { ((cos(Rotation) - (Velocity.x * topSpeed)) * accelerationAmount) * deltaTime,
+			((sin(Rotation) - (Velocity.y * topSpeed)) * accelerationAmount) * deltaTime, 0 };
+}
+//Returns Vector3 deceleration down to zero.
+Vector3 PositionedObject::DeaccelerationToZero(float decelerationAmount, float deltaTime)
+{
+	Vector3 deceleration = { 0, 0, 0 };
+
+	if (Velocity.x > 0.01 || Velocity.y > 0.01 || Velocity.x < -0.01 || Velocity.y < -0.01)
+	{
+		deceleration = { (-Velocity.x * decelerationAmount) * deltaTime,
+		(-Velocity.y * decelerationAmount) * deltaTime, 0 };
+	}
+	else
+	{
+		Velocity = { 0, 0, 0 };
+	}
+
+	return deceleration;
+}
 
 Quaternion PositionedObject::EulerToQuaternion(float yaw, float pitch, float roll)
 {

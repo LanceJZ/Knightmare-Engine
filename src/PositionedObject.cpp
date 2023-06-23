@@ -61,7 +61,7 @@ Vector3 PositionedObject::AccelerationToMaxAtRotation(float accelerationAmount, 
 			((sin(Rotation) - (Velocity.y * topSpeed)) * accelerationAmount) * deltaTime, 0 };
 }
 //Returns Vector3 deceleration down to zero.
-Vector3 PositionedObject::DeaccelerationToZero(float decelerationAmount, float deltaTime)
+Vector3 PositionedObject::DecelerationToZero(float decelerationAmount, float deltaTime)
 {
 	Vector3 deceleration = { 0, 0, 0 };
 

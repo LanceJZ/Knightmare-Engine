@@ -50,7 +50,7 @@ public:
 	Vector3 VelocityFromAngleZ(float angle, float magnitude);
 	Vector3 AccelerationToMaxAtRotation(float accelerationAmount, float topSpeed,
 		float deltaTime);
-	Vector3 DeaccelerationToZero(float decelerationAmount, float deltaTime);
+	Vector3 DecelerationToZero(float decelerationAmount, float deltaTime);
 	Quaternion EulerToQuaternion(float yaw, float pitch, float roll);
 	void SetParent(std::shared_ptr<PositionedObject> parent);
 	void RemoveChild(PositionedObject* child);

@@ -90,23 +90,61 @@ void EntityManager::Draw()
 	}
 }
 
-void EntityManager::AddEntity(std::shared_ptr<Entity> entity)
+size_t EntityManager::AddEntity(std::shared_ptr<Entity> entity)
 {
 	Entities.push_back(entity);
 	Entities[Entities.size() - 1]->Initialize();
+
+	return Entities.size() - 1;
 }
 
-void EntityManager::AddLineModel(std::shared_ptr<LineModel> model)
+size_t EntityManager::AddEntity()
 {
+	size_t entityNumber = Entities.size();
+	std::shared_ptr<Entity> newEntity = std::make_shared<Entity>();
+	Entities.push_back(newEntity);
+
+	return entityNumber;
+}
+
+size_t EntityManager::AddLineModel(std::shared_ptr<LineModel> model)
+{
+	size_t number = LineModels.size();
+
 	LineModels.push_back(model);
-	LineModels[LineModels.size() - 1]->Initialize();
+	LineModels[number]->Initialize();
+
+	return number;
 }
 
-void EntityManager::AddModel3D(std::shared_ptr<Model3D> model, Camera* camera)
+size_t EntityManager::AddLineModel(LineModelPoints model)
 {
+	size_t number = LineModels.size();
+
+	LineModels.push_back(std::make_shared<LineModel>());
+	LineModels[number]->SetModel(model);
+
+	return number;
+}
+
+size_t EntityManager::AddModel3D(std::shared_ptr<Model3D> model, Camera* camera)
+{
+	size_t modelNumber = Model3Ds.size();
+
 	TheCamera = camera;
 	Model3Ds.push_back(model);
-	Model3Ds[Model3Ds.size() - 1]->Initialize();
+	Model3Ds[modelNumber]->Initialize();
+
+	return modelNumber;
+}
+
+size_t EntityManager::AddModel3D(Model model, Camera* camera)
+{
+	size_t modelNumber = Model3Ds.size();
+	std::shared_ptr<Model3D> newModel3D = std::make_shared<Model3D>();
+	Model3Ds.push_back(newModel3D);
+
+	return modelNumber;
 }
 
 std::shared_ptr<Entity> EntityManager::CreateEntity()

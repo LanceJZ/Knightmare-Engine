@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "LineModel.h"
 #include "Model3D.h"
+#include "Timer.h"
 
 class EntityManager : Common
 {
@@ -24,6 +25,7 @@ public:
 	size_t AddLineModel(LineModelPoints model);
 	size_t AddModel3D(std::shared_ptr<Model3D> model, Camera* camera);
 	size_t AddModel3D(Model model, Camera* camera);
+	size_t AddTimer();
 
 	std::shared_ptr<Entity> CreateEntity();
 	std::shared_ptr<LineModel> CreateLineModel();
@@ -32,6 +34,7 @@ public:
 	std::vector<std::shared_ptr<Entity>> Entities;
 	std::vector<std::shared_ptr<LineModel>> LineModels;
 	std::vector<std::shared_ptr<Model3D>> Model3Ds;
+	std::vector<std::shared_ptr<Timer>> Timers;
 
 private:
 	Camera* TheCamera = {};

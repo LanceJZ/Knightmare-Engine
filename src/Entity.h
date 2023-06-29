@@ -12,8 +12,8 @@ public:
 	virtual void Update(float deltaTime);
 	virtual void Draw();
 
-	bool CirclesIntersect(Entity* target);
-	bool CirclesIntersectBullet(Entity* target);
+	bool CirclesIntersect(Entity& target);
+	bool CirclesIntersectBullet(Entity& target);
 
 private:
 	Ray TheRay = { 0 };

@@ -169,6 +169,10 @@
     </ClCompile>
     <ClCompile Include="ExplosionControl.cpp" />
     <ClCompile Include="LineModel.cpp" />
+    <ClCompile Include="Managers.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Model3D.cpp" />
     <ClCompile Include="ParticleCube.cpp" />
     <ClCompile Include="PositionedObject.cpp" />
@@ -188,6 +192,10 @@
     </ClInclude>
     <ClInclude Include="ExplosionControl.h" />
     <ClInclude Include="LineModel.h" />
+    <ClInclude Include="Managers.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Model3D.h" />
     <ClInclude Include="ParticleCube.h" />
     <ClInclude Include="PositionedObject.h" />

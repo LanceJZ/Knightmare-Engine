@@ -1,6 +1,10 @@
 #include "LineModel.h"
 #include "rlgl.h"
 
+void LineModel::BeginRun()
+{
+}
+
 void LineModel::Input()
 {
 }
@@ -56,15 +60,6 @@ void LineModel::Draw()
 	rlEnd();
 }
 
-void LineModel::LoadModel(std::string fileName)
-{
-	if (FileExists(fileName.c_str()))
-	{
-		std::string linesTemp = LoadFileText(fileName.c_str());
-		LinePoints = ConvertStringToVector(linesTemp);
-	}
-}
-
 LineModelPoints LineModel::GetLineModel()
 {
 	return Lines;
@@ -85,56 +80,6 @@ void LineModel::SetModel(LineModelPoints lines)
 {
 	Lines = lines;
 	LinePoints = lines.linePoints;
-}
-
-std::vector<Vector3> LineModel::ConvertStringToVector(std::string linesString)
-{
-	std::vector<Vector3> linesConverted;
-	bool isNumber = false;
-	float x = 0;
-	float y = 0;
-	float z = 0;
-	std::string number;
-	std::string onAxis;
-	Vector3 line = { 0 };
-
-	for (auto character : linesString)
-	{
-		if (character > 44 && character < 58)
-		{
-			number.append(1, character);
-		}
-		else
-		{
-			if (character == 88)
-			{
-				onAxis = "X";
-			}
-			else if (character == 89)
-			{
-				onAxis = "Y";
-
-				line.x = stof(number);
-				number = "";
-			}
-			else if (character == 90)
-			{
-				onAxis = "Z";
-
-				line.y = stof(number);
-				number = "";
-			}
-			else if (character == 125)
-			{
-				line.z = stof(number);
-				number = "";
-
-				linesConverted.push_back(line);
-			}
-		}
-	}
-
-	return linesConverted;
 }
 
 void LineModel::DrawLines(std::vector <Vector3> points, Vector3 rotationAxis, Color color)

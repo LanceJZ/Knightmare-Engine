@@ -25,13 +25,13 @@ void Entity::Draw()
 /// </summary>
 /// <param name="target">Target Entity.</param>
 /// <returns></returns>
-bool Entity::CirclesIntersect(Entity* target)
+bool Entity::CirclesIntersect(Entity& target)
 {
-	if (!Enabled || !target->Enabled)
+	if (!Enabled || !target.Enabled)
 		return false;
 
-	Vector2 distance = { target->Position.x - X(), target->Position.y - Y() };
-	float radius = Radius + target->Radius;
+	Vector2 distance = { target.Position.x - X(), target.Position.y - Y() };
+	float radius = Radius + target.Radius;
 
 	if ((distance.x * distance.x) + (distance.y * distance.y) < radius * radius)
 		return true;
@@ -39,9 +39,9 @@ bool Entity::CirclesIntersect(Entity* target)
 	return false;
 }
 
-bool Entity::CirclesIntersectBullet(Entity* target)
+bool Entity::CirclesIntersectBullet(Entity& target)
 {
-	if (!Enabled || !target->Enabled)
+	if (!Enabled || !target.Enabled)
 		return false;
 
 	TheRay.position = Position;
@@ -55,7 +55,7 @@ bool Entity::CirclesIntersectBullet(Entity* target)
 		TheRay.direction = { -1, 0, 0 };
 	}
 
-	TheRayCollision = GetRayCollisionSphere(TheRay, target->Position, target->Radius);
+	TheRayCollision = GetRayCollisionSphere(TheRay, target.Position, target.Radius);
 
 	if (TheRayCollision.hit)
 	{

@@ -2,11 +2,14 @@
 
 EntityManager::EntityManager()
 {
-
 }
 
 EntityManager::~EntityManager()
 {
+	Entities.clear();
+	LineModels.clear();
+	Model3Ds.clear();
+	Timers.clear();
 }
 
 bool EntityManager::Initialize()
@@ -37,6 +40,10 @@ bool EntityManager::BeginRun()
 		model3D->BeginRun(TheCamera);
 	}
 
+	for (auto lineModel : LineModels)
+	{
+		lineModel->BeginRun();
+	}
 
 	return false;
 }
@@ -70,6 +77,11 @@ void EntityManager::Update(float deltaTime)
 	{
 		model3D->Update(deltaTime);
 	}
+
+	for (auto timer : Timers)
+	{
+		timer->Update(deltaTime);
+	}
 }
 
 void EntityManager::Draw()
@@ -92,10 +104,11 @@ void EntityManager::Draw()
 
 size_t EntityManager::AddEntity(std::shared_ptr<Entity> entity)
 {
+	size_t entityNumber = Entities.size();
 	Entities.push_back(entity);
-	Entities[Entities.size() - 1]->Initialize();
+	Entities[entityNumber]->Initialize();
 
-	return Entities.size() - 1;
+	return entityNumber;
 }
 
 size_t EntityManager::AddEntity()
@@ -103,6 +116,7 @@ size_t EntityManager::AddEntity()
 	size_t entityNumber = Entities.size();
 	std::shared_ptr<Entity> newEntity = std::make_shared<Entity>();
 	Entities.push_back(newEntity);
+	Entities[entityNumber]->Initialize();
 
 	return entityNumber;
 }
@@ -123,6 +137,7 @@ size_t EntityManager::AddLineModel(LineModelPoints model)
 
 	LineModels.push_back(std::make_shared<LineModel>());
 	LineModels[number]->SetModel(model);
+	LineModels[number]->Initialize();
 
 	return number;
 }
@@ -141,16 +156,25 @@ size_t EntityManager::AddModel3D(std::shared_ptr<Model3D> model, Camera* camera)
 size_t EntityManager::AddModel3D(Model model, Camera* camera)
 {
 	size_t modelNumber = Model3Ds.size();
-	std::shared_ptr<Model3D> newModel3D = std::make_shared<Model3D>();
-	Model3Ds.push_back(newModel3D);
+	Model3Ds.push_back(std::make_shared<Model3D>());
+	Model3Ds[modelNumber]->Initialize();
 
 	return modelNumber;
+}
+
+size_t EntityManager::AddTimer()
+{
+	size_t timerNumber = Timers.size();
+	Timers.push_back(std::make_shared<Timer>());
+
+	return timerNumber;
 }
 
 std::shared_ptr<Entity> EntityManager::CreateEntity()
 {
 	std::shared_ptr<Entity> newEntity = std::make_shared<Entity>();
 	Entities.push_back(newEntity);
+	newEntity->Initialize();
 
 	return newEntity;
 }
@@ -159,6 +183,7 @@ std::shared_ptr<LineModel> EntityManager::CreateLineModel()
 {
 	std::shared_ptr<LineModel> newLineModel = std::make_shared<LineModel>();
 	LineModels.push_back(newLineModel);
+	newLineModel->Initialize();
 
 	return newLineModel;
 }
@@ -167,6 +192,7 @@ std::shared_ptr<Model3D> EntityManager::CreateModel3D()
 {
 	std::shared_ptr<Model3D> newModel3D = std::make_shared<Model3D>();
 	Model3Ds.push_back(newModel3D);
+	newModel3D->Initialize();
 
 	return newModel3D;
 }

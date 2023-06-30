@@ -26,6 +26,7 @@ public:
 	size_t AddModel3D(std::shared_ptr<Model3D> model, Camera* camera);
 	size_t AddModel3D(Model model, Camera* camera);
 	size_t AddTimer();
+	size_t AddCommon(std::shared_ptr<Common> common);
 
 	std::shared_ptr<Entity> CreateEntity();
 	std::shared_ptr<LineModel> CreateLineModel();
@@ -35,6 +36,7 @@ public:
 	std::vector<std::shared_ptr<LineModel>> LineModels;
 	std::vector<std::shared_ptr<Model3D>> Model3Ds;
 	std::vector<std::shared_ptr<Timer>> Timers;
+	std::vector<std::shared_ptr<Common>> Commons;
 
 private:
 	Camera* TheCamera = {};

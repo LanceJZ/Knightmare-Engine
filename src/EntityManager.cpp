@@ -29,6 +29,11 @@ bool EntityManager::Initialize()
 		model3D->Initialize();
 	}
 
+	for (auto common : Commons)
+	{
+		common->Initialize();
+	}
+
 	return false;
 }
 
@@ -81,6 +86,11 @@ void EntityManager::Update(float deltaTime)
 	for (auto timer : Timers)
 	{
 		timer->Update(deltaTime);
+	}
+
+	for (auto common : Commons)
+	{
+		common->Update();
 	}
 }
 
@@ -168,6 +178,14 @@ size_t EntityManager::AddTimer()
 	Timers.push_back(std::make_shared<Timer>());
 
 	return timerNumber;
+}
+
+size_t EntityManager::AddCommon(std::shared_ptr<Common> common)
+{
+	size_t commonNumber = Commons.size();
+	Commons.push_back(common);
+
+	return commonNumber;
 }
 
 std::shared_ptr<Entity> EntityManager::CreateEntity()

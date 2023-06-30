@@ -8,6 +8,10 @@ bool Common::Initialize()
 	return false;
 }
 
+void Common::Update()
+{
+}
+
 float Common::GetRandomScreenY()
 {
 	return GetRandomFloat(-GameScreenHalfHeight, GameScreenHalfHeight);

@@ -34,7 +34,7 @@ bool EntityManager::Initialize()
 		common->Initialize();
 	}
 
-	return false;
+	return true;
 }
 
 bool EntityManager::BeginRun()
@@ -50,7 +50,12 @@ bool EntityManager::BeginRun()
 		lineModel->BeginRun();
 	}
 
-	return false;
+	for (auto common : Commons)
+	{
+		common->BeginRun();
+	}
+
+	return true;
 }
 
 void EntityManager::Input()
@@ -75,12 +80,12 @@ void EntityManager::Update(float deltaTime)
 
 	for (auto lineModel : LineModels)
 	{
-		lineModel->Update(deltaTime);
+		if (lineModel->Enabled)	lineModel->Update(deltaTime);
 	}
 
 	for (auto model3D : Model3Ds)
 	{
-		model3D->Update(deltaTime);
+		if (model3D->Enabled) model3D->Update(deltaTime);
 	}
 
 	for (auto timer : Timers)

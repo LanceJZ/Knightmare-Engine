@@ -1,8 +1,9 @@
 #include "LineModel.h"
 #include "rlgl.h"
 
-void LineModel::BeginRun()
+bool LineModel::BeginRun()
 {
+	return true;
 }
 
 void LineModel::Input()
@@ -11,7 +12,8 @@ void LineModel::Input()
 
 void LineModel::Update(float deltaTime)
 {
-	Entity::Update(deltaTime);
+	if (Enabled) Entity::Update(deltaTime);
+
 	ModelColor.a = (char)Alpha;
 }
 

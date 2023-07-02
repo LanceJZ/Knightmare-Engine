@@ -9,7 +9,7 @@ public:
 	Color ModelColor = WHITE;
 	float Alpha = 255;
 
-	virtual void BeginRun();
+	virtual bool BeginRun();
 	virtual void Input();
 	virtual void Update(float deltaTime);
 	virtual void Draw();

@@ -8,6 +8,12 @@ bool Common::Initialize()
 	return false;
 }
 
+bool Common::BeginRun()
+{
+
+	return true;
+}
+
 void Common::Update()
 {
 }

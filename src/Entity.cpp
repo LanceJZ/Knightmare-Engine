@@ -8,7 +8,7 @@ bool Entity::Initialize()
 
 void Entity::Update(float deltaTime)
 {
-	PositionedObject::Update(deltaTime);
+	if (Enabled) PositionedObject::Update(deltaTime);
 }
 
 void Entity::Draw()

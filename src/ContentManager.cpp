@@ -31,13 +31,13 @@ ContentManager::~ContentManager()
 bool ContentManager::Initialize()
 {
 
-	return false;
+	return true;
 }
 
 bool ContentManager::BeginRun()
 {
 
-	return false;
+	return true;
 }
 
 size_t ContentManager::LoadTheModel(std::string modelFileName)

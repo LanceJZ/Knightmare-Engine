@@ -17,6 +17,7 @@ public:
 	float GameScreenHalfHeight = { 0 };
 
 	virtual bool Initialize();
+	virtual bool BeginRun();
 	virtual void Update();
 	float GetRandomScreenY();
 	float GetRandomFloat(float min, float max);

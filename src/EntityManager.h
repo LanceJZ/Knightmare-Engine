@@ -19,24 +19,24 @@ public:
 	void Update(float deltaTime);
 	void Draw();
 
-	size_t AddEntity(std::shared_ptr<Entity> entity);
+	size_t AddEntity(Entity* entity);
 	size_t AddEntity();
-	size_t AddLineModel(std::shared_ptr<LineModel> model);
+	size_t AddLineModel(LineModel* model);
 	size_t AddLineModel(LineModelPoints model);
-	size_t AddModel3D(std::shared_ptr<Model3D> model, Camera* camera);
+	size_t AddModel3D(Model3D* model, Camera* camera);
 	size_t AddModel3D(Model model, Camera* camera);
 	size_t AddTimer();
-	size_t AddCommon(std::shared_ptr<Common> common);
+	size_t AddCommon(Common* common);
 
-	std::shared_ptr<Entity> CreateEntity();
-	std::shared_ptr<LineModel> CreateLineModel();
-	std::shared_ptr<Model3D> CreateModel3D();
+	Entity* CreateEntity();
+	LineModel* CreateLineModel();
+	Model3D* CreateModel3D();
 
-	std::vector<std::shared_ptr<Entity>> Entities;
-	std::vector<std::shared_ptr<LineModel>> LineModels;
-	std::vector<std::shared_ptr<Model3D>> Model3Ds;
-	std::vector<std::shared_ptr<Timer>> Timers;
-	std::vector<std::shared_ptr<Common>> Commons;
+	std::vector<Entity*> Entities;
+	std::vector<LineModel*> LineModels;
+	std::vector<Model3D*> Model3Ds;
+	std::vector<Timer*> Timers;
+	std::vector<Common*> Commons;
 
 private:
 	Camera* TheCamera = {};

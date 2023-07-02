@@ -1,5 +1,14 @@
 #include "PositionedObject.h"
 
+PositionedObject::PositionedObject()
+{
+}
+
+PositionedObject::~PositionedObject()
+{
+	Parents.clear();
+}
+
 bool PositionedObject::Initialize()
 {
 	Common::Initialize();
@@ -128,7 +137,7 @@ void PositionedObject::Z(float z)
 	LastFramePosition.z = z;
 }
 
-void PositionedObject::SetParent(std::shared_ptr<PositionedObject> parent)
+void PositionedObject::SetParent(PositionedObject* parent)
 {
 	for (auto myParent : parent->Parents)
 	{

@@ -4,6 +4,9 @@
 class PositionedObject : public Common
 {
 public:
+	PositionedObject();
+	virtual ~PositionedObject();
+
 	bool IsChild = false;
 	bool IsParent = false;
 	bool IsConnectedChild = true;
@@ -31,7 +34,7 @@ public:
 	Vector3 RotationAxis = { 0, 0, 1 };
 	Vector3 ChildPosition = { 0, 0, 0 };
 	float ChildRotation = 0;
-	std::vector <std::shared_ptr<PositionedObject>> Parents;
+	std::vector<PositionedObject*> Parents;
 
 	virtual bool Initialize();
 	virtual void Update(float deltaTime);
@@ -52,7 +55,7 @@ public:
 		float deltaTime);
 	Vector3 DecelerationToZero(float decelerationAmount, float deltaTime);
 	Quaternion EulerToQuaternion(float yaw, float pitch, float roll);
-	void SetParent(std::shared_ptr<PositionedObject> parent);
+	void SetParent(PositionedObject* parent);
 	void RemoveChild(PositionedObject* child);
 	void RemoveFromParents(PositionedObject* child);
 	void DisconnectChild(PositionedObject* child);

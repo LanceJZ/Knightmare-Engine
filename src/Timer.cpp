@@ -2,17 +2,17 @@
 
 void Timer::Update(float deltaTime)
 {
-    TheSeconds += deltaTime;
+    SecondsElapsed += deltaTime;
 }
 
 void Timer::Set(float amountInSeconds)
 {
-    TheAmount = amountInSeconds;
+    TimerAmount = amountInSeconds;
 }
 
 void Timer::Reset()
 {
-    TheSeconds = 0;
+    SecondsElapsed = 0;
 }
 
 void Timer::Reset(float amountInSeconds)
@@ -23,5 +23,5 @@ void Timer::Reset(float amountInSeconds)
 
 bool Timer::Elapsed()
 {
-    return TheSeconds > TheAmount;
+    return SecondsElapsed > TimerAmount;
 }

@@ -57,6 +57,7 @@ public:
 	Quaternion EulerToQuaternion(float yaw, float pitch, float roll);
 	void SetParent(PositionedObject* parent);
 	void RemoveChild(PositionedObject* child);
+	void ReConnectAsChild(PositionedObject* child);
 	void RemoveFromParents(PositionedObject* child);
 	void DisconnectChild(PositionedObject* child);
 	void ConnectChild(PositionedObject* child);

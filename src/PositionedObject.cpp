@@ -150,7 +150,18 @@ void PositionedObject::SetParent(PositionedObject* parent)
 
 void PositionedObject::RemoveChild(PositionedObject* child)
 {
+	for (auto parent : Parents)
+	{
+		Vector3Add(Position, parent->Position);
+		Rotation += parent->Rotation;
+	}
 
+	IsChild = false;
+}
+
+void PositionedObject::ReConnectAsChild(PositionedObject* child)
+{
+	IsChild = true;
 }
 
 void PositionedObject::RemoveFromParents(PositionedObject* child)

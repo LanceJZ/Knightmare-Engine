@@ -183,6 +183,16 @@ size_t EntityManager::AddLineModel(LineModelPoints model)
 	return number;
 }
 
+size_t EntityManager::AddLineModel()
+{
+	size_t number = LineModels.size();
+
+	LineModels.push_back(new LineModel());
+	LineModels[number]->Initialize();
+
+	return number;
+}
+
 size_t EntityManager::AddModel3D(Model3D* model, Camera* camera)
 {
 	size_t modelNumber = Model3Ds.size();

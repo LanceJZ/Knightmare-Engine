@@ -23,6 +23,7 @@ public:
 	size_t AddEntity();
 	size_t AddLineModel(LineModel* model);
 	size_t AddLineModel(LineModelPoints model);
+	size_t AddLineModel();
 	size_t AddModel3D(Model3D* model, Camera* camera);
 	size_t AddModel3D(Model model, Camera* camera);
 	size_t AddTimer();

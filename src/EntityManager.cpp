@@ -101,7 +101,7 @@ void EntityManager::Update(float deltaTime)
 {
 	for (auto entity : Entities)
 	{
-		entity->Update(deltaTime);
+		if (entity->Enabled) entity->Update(deltaTime);
 	}
 
 	for (auto lineModel : LineModels)

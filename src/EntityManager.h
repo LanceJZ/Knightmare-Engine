@@ -12,12 +12,11 @@ public:
 	EntityManager();
 	virtual ~EntityManager();
 
-	bool Initialize();
 	bool BeginRun();
 
 	void Input();
 	void Update(float deltaTime);
-	void Draw();
+	void Draw3D();
 
 	size_t AddEntity(Entity* entity);
 	size_t AddEntity();
@@ -31,7 +30,7 @@ public:
 
 	Entity* CreateEntity();
 	LineModel* CreateLineModel();
-	Model3D* CreateModel3D();
+	Model3D* CreateModel3D(Model model, Camera* camera);
 
 	std::vector<Entity*> Entities;
 	std::vector<LineModel*> LineModels;

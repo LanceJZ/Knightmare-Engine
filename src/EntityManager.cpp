@@ -38,31 +38,6 @@ EntityManager::~EntityManager()
 	Commons.clear();
 }
 
-bool EntityManager::Initialize()
-{
-	for (auto entity : Entities)
-	{
-		entity->Initialize();
-	}
-
-	for (auto lineModel : LineModels)
-	{
-		lineModel->Initialize();
-	}
-
-	for (auto model3D : Model3Ds)
-	{
-		model3D->Initialize();
-	}
-
-	for (auto common : Commons)
-	{
-		common->Initialize();
-	}
-
-	return true;
-}
-
 bool EntityManager::BeginRun()
 {
 
@@ -125,7 +100,7 @@ void EntityManager::Update(float deltaTime)
 	}
 }
 
-void EntityManager::Draw()
+void EntityManager::Draw3D()
 {
 	for (auto entity : Entities)
 	{
@@ -148,6 +123,7 @@ size_t EntityManager::AddEntity(Entity* entity)
 	size_t entityNumber = Entities.size();
 	Entities.push_back(entity);
 	Entities[entityNumber]->Initialize();
+	Entities[entityNumber]->BeginRun();
 
 	return entityNumber;
 }
@@ -158,6 +134,7 @@ size_t EntityManager::AddEntity()
 	Entity* newEntity = new Entity();
 	Entities.push_back(newEntity);
 	Entities[entityNumber]->Initialize();
+	Entities[entityNumber]->BeginRun();
 
 	return entityNumber;
 }
@@ -168,6 +145,7 @@ size_t EntityManager::AddLineModel(LineModel* model)
 
 	LineModels.push_back(model);
 	LineModels[number]->Initialize();
+	LineModels[number]->BeginRun();
 
 	return number;
 }
@@ -179,6 +157,7 @@ size_t EntityManager::AddLineModel(LineModelPoints model)
 	LineModels.push_back(new LineModel());
 	LineModels[number]->SetModel(model);
 	LineModels[number]->Initialize();
+	LineModels[number]->BeginRun();
 
 	return number;
 }
@@ -189,6 +168,7 @@ size_t EntityManager::AddLineModel()
 
 	LineModels.push_back(new LineModel());
 	LineModels[number]->Initialize();
+	LineModels[number]->BeginRun();
 
 	return number;
 }
@@ -200,6 +180,7 @@ size_t EntityManager::AddModel3D(Model3D* model, Camera* camera)
 	TheCamera = camera;
 	Model3Ds.push_back(model);
 	Model3Ds[modelNumber]->Initialize();
+	Model3Ds[modelNumber]->BeginRun(camera);
 
 	return modelNumber;
 }
@@ -208,7 +189,9 @@ size_t EntityManager::AddModel3D(Model model, Camera* camera)
 {
 	size_t modelNumber = Model3Ds.size();
 	Model3Ds.push_back(new Model3D());
+	Model3Ds[modelNumber]->SetModel(model, 1);
 	Model3Ds[modelNumber]->Initialize();
+	Model3Ds[modelNumber]->BeginRun(camera);
 
 	return modelNumber;
 }
@@ -226,6 +209,7 @@ size_t EntityManager::AddCommon(Common* common)
 	size_t commonNumber = Commons.size();
 	Commons.push_back(common);
 	Commons[commonNumber]->Initialize();
+	Commons[commonNumber]->BeginRun();
 
 	return commonNumber;
 }
@@ -235,6 +219,7 @@ Entity* EntityManager::CreateEntity()
 	Entity* newEntity = new Entity();
 	Entities.push_back(newEntity);
 	newEntity->Initialize();
+	newEntity->BeginRun();
 
 	return newEntity;
 }
@@ -244,15 +229,18 @@ LineModel* EntityManager::CreateLineModel()
 	LineModel* newLineModel = new LineModel();
 	LineModels.push_back(newLineModel);
 	newLineModel->Initialize();
+	newLineModel->BeginRun();
 
 	return newLineModel;
 }
 
-Model3D* EntityManager::CreateModel3D()
+Model3D* EntityManager::CreateModel3D(Model model, Camera* camera)
 {
 	Model3D* newModel3D = new Model3D();
 	Model3Ds.push_back(newModel3D);
+	newModel3D->SetModel(model, 1);
 	newModel3D->Initialize();
+	newModel3D->BeginRun(camera);
 
 	return newModel3D;
 }

@@ -27,13 +27,16 @@ public:
 	float RotationAccelerationX = 0;
 	float RotationAccelerationY = 0;
 	float RotationAccelerationZ = 0;
-	Vector3 Acceleration = { 0, 0, 0 };
-	Vector3 Velocity = { 0, 0, 0 };
-	Vector3 Position = { 0, 0, 0 };
-	Vector3 LastFramePosition = { 0, 0, 0 };
-	Vector3 RotationAxis = { 0, 0, 1 };
-	Vector3 ChildPosition = { 0, 0, 0 };
 	float ChildRotation = 0;
+	float WorldRotation = 0;
+
+	Vector3 WorldPosition = Vector3Zero();
+	Vector3 Acceleration = Vector3Zero();
+	Vector3 Velocity = Vector3Zero();
+	Vector3 Position = Vector3Zero();
+	Vector3 LastFramePosition = Vector3Zero();
+	Vector3 RotationAxis = { 0, 0, 1 };
+	Vector3 ChildPosition = Vector3Zero();
 	std::vector<PositionedObject*> Parents;
 
 	virtual bool Initialize();
@@ -56,9 +59,7 @@ public:
 	Vector3 DecelerationToZero(float decelerationAmount, float deltaTime);
 	Quaternion EulerToQuaternion(float yaw, float pitch, float roll);
 	void SetParent(PositionedObject* parent);
-	void RemoveChild(PositionedObject* child);
-	void ReConnectAsChild(PositionedObject* child);
-	void RemoveFromParents(PositionedObject* child);
+	void RemoveFromParents();
 	void DisconnectChild(PositionedObject* child);
 	void ConnectChild(PositionedObject* child);
 	void CheckScreenEdge();

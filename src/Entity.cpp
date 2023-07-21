@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "rlgl.h"
 
 bool Entity::Initialize()
 {
@@ -8,7 +9,35 @@ bool Entity::Initialize()
 
 void Entity::Update(float deltaTime)
 {
-	if (Enabled) PositionedObject::Update(deltaTime);
+	if (!Enabled) return;
+
+	PositionedObject::Update(deltaTime);
+
+	if (!EntityOnly) return;
+
+	rlPushMatrix();
+
+	if (IsChild)
+	{
+		for (auto parent : Parents)
+		{
+			rlTranslatef(parent->Position.x, parent->Position.y, Position.z);
+			rlRotatef(parent->Rotation, RotationAxis.x, RotationAxis.y, RotationAxis.z);
+		}
+	}
+
+	rlTranslatef(Position.x, Position.y, Position.z);
+	rlRotatef(Rotation, RotationAxis.x, RotationAxis.y, RotationAxis.z);
+	rlScalef(Scale, Scale, Scale);
+
+	Matrix transform = rlGetMatrixTransform();
+	Quaternion quaternion = QuaternionFromMatrix(transform);
+
+	WorldPosition = Vector3Transform(Vector3Zero(), transform);
+	WorldRotation = quaternion.z;
+
+	rlPopMatrix();
+	rlEnd();
 }
 
 void Entity::Draw()

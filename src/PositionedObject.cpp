@@ -122,81 +122,61 @@ float PositionedObject::Z()
 void PositionedObject::X(float x)
 {
 	Position.x = x;
-	LastFramePosition.x = x;
 }
 
 void PositionedObject::Y(float y)
 {
 	Position.y = y;
-	LastFramePosition.y = y;
 }
 
 void PositionedObject::Z(float z)
 {
 	Position.z = z;
-	LastFramePosition.z = z;
 }
 
 void PositionedObject::SetParent(PositionedObject* parent)
 {
+	if (IsChild) return;
+
 	for (auto myParent : parent->Parents)
 	{
 		Parents.push_back(myParent);
 	}
 
 	Parents.push_back(parent);
+
+	parent->IsParent = true;
 	IsChild = true;
+	ChildPosition = Position;
+	ChildRotation = Rotation;
 }
 
-void PositionedObject::RemoveChild(PositionedObject* child)
+void PositionedObject::RemoveFromParents()
 {
-	for (auto parent : Parents)
-	{
-		Vector3Add(Position, parent->Position);
-		Rotation += parent->Rotation;
-	}
-
 	IsChild = false;
-}
-
-void PositionedObject::ReConnectAsChild(PositionedObject* child)
-{
-	IsChild = true;
-}
-
-void PositionedObject::RemoveFromParents(PositionedObject* child)
-{
-
+	Position = WorldPosition;
+	Rotation = WorldRotation;
 }
 
 void PositionedObject::DisconnectChild(PositionedObject* child)
 {
-	if (child->IsParent)
-		return;
+	if (child->IsParent) return;
 
-	if (!child->IsConnectedChild)
-		return;
+	if (!child->IsChild) return;
 
 	child->IsConnectedChild = false;
 	child->ChildPosition = child->Position;
 	child->ChildRotation = child->Rotation;
-
-	for (auto parent : child->Parents)
-	{
-		child->Position = Vector3Add(parent->Position, child->Position);
-		child->Rotation += parent->Rotation;
-	}
+	child->IsChild = false;
+	child->Position = WorldPosition;
+	child->Rotation = WorldRotation;
 }
 
 void PositionedObject::ConnectChild(PositionedObject* child)
 {
-	if (child->IsParent)
-		return;
+	if (child->IsChild)	return;
 
-	if (child->IsConnectedChild)
-		return;
-
-	child->IsConnectedChild = true;
+	child->IsChild = true;
 	child->Position = child->ChildPosition;
 	child->Rotation = child->ChildRotation;
 }

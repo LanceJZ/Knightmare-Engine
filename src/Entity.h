@@ -6,6 +6,7 @@ class Entity : public PositionedObject
 public:
 	bool Enabled = true;
 	bool BeenHit = false;
+	bool EntityOnly = false;
 	float Scale = 1;
 
 	virtual bool Initialize();

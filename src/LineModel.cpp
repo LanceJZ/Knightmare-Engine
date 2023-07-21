@@ -58,6 +58,12 @@ void LineModel::Draw()
 		);
 	}
 
+	Matrix transform = rlGetMatrixTransform();
+	Quaternion quaternion = QuaternionFromMatrix(transform);
+
+	WorldPosition = Vector3Transform(Vector3Zero(), transform);
+	WorldRotation = quaternion.z;
+
 	rlPopMatrix();
 	rlEnd();
 }
